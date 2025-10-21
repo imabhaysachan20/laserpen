@@ -30,7 +30,11 @@ export default function LaserPen({
 
   // Listen to Electron global shortcuts
   useEffect(() => {
-    if (!window.electronAPI) return;
+    if (!window.electronAPI) {
+      console.warn('electronAPI not available');
+      return;
+    }
+    console.log('electronAPI is available, setting up listeners');
 
     const cleanupToggle = window.electronAPI.onToggleDrawing(() => {
       setEnabled((prev) => !prev);

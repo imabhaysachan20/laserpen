@@ -15,7 +15,6 @@ function createWindow() {
     alwaysOnTop: true,
     hasShadow: false,
     resizable: false,
-    focusable: false,
     backgroundColor: '#00000000', // full transparency
     webPreferences: {
       nodeIntegration: false,
@@ -30,8 +29,8 @@ function createWindow() {
   // Load built Vite files
   win.loadFile(path.join(__dirname, '../dist/index.html'));
   
-  // Optional: open dev tools for debugging
-  // win.webContents.openDevTools();
+  // Open dev tools for debugging
+  win.webContents.openDevTools();
   
   win.setAlwaysOnTop(true, 'screen-saver');
 
@@ -44,32 +43,43 @@ function createWindow() {
 // Register global shortcuts
 function registerShortcuts() {
   // Ctrl+Shift+D: Toggle drawing mode
-  globalShortcut.register('CommandOrControl+Shift+D', () => {
+  const toggleRegistered = globalShortcut.register('CommandOrControl+Shift+D', () => {
+    console.log('Toggle shortcut pressed');
     if (win) {
       win.webContents.send('toggle-drawing');
+      console.log('Sent toggle-drawing message');
     }
   });
+  console.log('Ctrl+Shift+D registered:', toggleRegistered);
 
   // Ctrl+Shift+C: Clear canvas
-  globalShortcut.register('CommandOrControl+Shift+C', () => {
+  const clearRegistered = globalShortcut.register('CommandOrControl+Shift+C', () => {
+    console.log('Clear shortcut pressed');
     if (win) {
       win.webContents.send('clear-canvas');
+      console.log('Sent clear-canvas message');
     }
   });
+  console.log('Ctrl+Shift+C registered:', clearRegistered);
 
   // Ctrl+B: Toggle UI visibility
-  globalShortcut.register('CommandOrControl+B', () => {
+  const uiRegistered = globalShortcut.register('CommandOrControl+B', () => {
+    console.log('Toggle UI shortcut pressed');
     if (win) {
       win.webContents.send('toggle-ui');
+      console.log('Sent toggle-ui message');
     }
   });
+  console.log('Ctrl+B registered:', uiRegistered);
 
   // Ctrl+Shift+Q: Quit app
-  globalShortcut.register('CommandOrControl+Shift+Q', () => {
+  const quitRegistered = globalShortcut.register('CommandOrControl+Shift+Q', () => {
+    console.log('Quit shortcut pressed');
     app.quit();
   });
+  console.log('Ctrl+Shift+Q registered:', quitRegistered);
 
-  console.log('Global shortcuts registered');
+  console.log('All shortcuts registered');
 }
 
 // Handle click-through toggle from renderer
