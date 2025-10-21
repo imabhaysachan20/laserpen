@@ -8,7 +8,7 @@ export default function App() {
         height="100vh"
         color="#ff2d55"
         radius={16}
-        enabled={true}
+        enabled={false}
       />
     
   );

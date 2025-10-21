@@ -16,6 +16,7 @@ export default function LaserPen({
   const last = useRef({ x: 0, y: 0 });
   const drawing = useRef(false);
   const [enabled, setEnabled] = useState(enabledProp);
+  const [showUI, setShowUI] = useState(true);
 
   // Sync controlled prop if changed
   useEffect(() => setEnabled(enabledProp), [enabledProp]);
@@ -42,9 +43,14 @@ export default function LaserPen({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 
+    const cleanupUI = window.electronAPI.onToggleUI(() => {
+      setShowUI((prev) => !prev);
+    });
+
     return () => {
       cleanupToggle();
       cleanupClear();
+      cleanupUI();
     };
   }, []);
 
@@ -197,67 +203,71 @@ export default function LaserPen({
         />
 
         {/* Control Panel */}
-        <div style={{ 
-          position: "absolute", 
-          left: 12, 
-          top: 12, 
-          zIndex: 40,
-          display: "flex",
-          gap: "10px",
-          alignItems: "center"
-        }}>
-          <button
-            onClick={() => setEnabled((s) => !s)}
-            style={{
-              background: enabled ? "#22c55e" : "#000000ce",
-              color: "#fff",
-              border: "none",
-              padding: "10px 16px",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: "600",
-              fontSize: "14px",
-              transition: "all 0.2s",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
-            }}
-            aria-pressed={enabled}
-          >
-            {enabled ? "🔴 Laser ON" : "⚫ Laser OFF"}
-          </button>
-
-          {enabled && (
-            <>
-              <button
-                onClick={clearCanvas}
-                style={{
-                  background: "#ef4444",
-                  color: "#fff",
-                  border: "none",
-                  padding: "10px 16px",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  fontSize: "14px",
-                  transition: "all 0.2s",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
-                }}
-              >
-                Clear
-              </button>
-
-              <div style={{
-                background: "#000000ce",
+        {showUI && (
+          <div style={{ 
+            position: "absolute", 
+            left: 12, 
+            top: 12, 
+            zIndex: 40,
+            display: "flex",
+            gap: "10px",
+            alignItems: "center"
+          }}>
+            <button
+              onClick={() => setEnabled((s) => !s)}
+              style={{
+                background: enabled ? "#22c55e" : "#000000ce",
                 color: "#fff",
-                padding: "8px 12px",
+                border: "none",
+                padding: "10px 16px",
                 borderRadius: "6px",
-                fontSize: "12px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
-              }}>
-                Shortcuts: Ctrl+Shift+D (Toggle) | Ctrl+Shift+C (Clear) | Ctrl+Shift+Q (Quit)
-              </div>
-            </>
-          )}
-        </div>
+                cursor: "pointer",
+                fontWeight: "600",
+                fontSize: "14px",
+                transition: "all 0.2s",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                pointerEvents: "auto"
+              }}
+              aria-pressed={enabled}
+            >
+              {enabled ? "🔴 Laser ON" : "⚫ Laser OFF"}
+            </button>
+
+            {enabled && (
+              <>
+                <button
+                  onClick={clearCanvas}
+                  style={{
+                    background: "#ef4444",
+                    color: "#fff",
+                    border: "none",
+                    padding: "10px 16px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                    fontSize: "14px",
+                    transition: "all 0.2s",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                    pointerEvents: "auto"
+                  }}
+                >
+                  Clear
+                </button>
+
+                <div style={{
+                  background: "#000000ce",
+                  color: "#fff",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  fontSize: "12px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+                }}>
+                  Shortcuts: Ctrl+Shift+D (Toggle) | Ctrl+Shift+C (Clear) | Ctrl+B (Hide UI) | Ctrl+Shift+Q (Quit)
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
