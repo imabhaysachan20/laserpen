@@ -78,19 +78,24 @@ export default function LaserPen({
     ctx.shadowBlur = 0;
     ctx.globalCompositeOperation = "source-over"; // Changed from "lighter" to avoid gaps
 
-    const fade = (time) => {
-      const elapsed = time - lastDrawTime.current;
+   const fade = (time) => {
+  const elapsed = time - lastDrawTime.current;
 
-      // Only start fading after the delay has passed
-      if (elapsed > delayBeforeFade) {
-        ctx.globalCompositeOperation = "destination-out";
-        ctx.fillStyle = `rgba(0, 0, 0, ${fadeSpeed})`;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.globalCompositeOperation = "source-over"; // Changed from "lighter"
-      }
+  if (elapsed > delayBeforeFade) {
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillStyle = "rgba(0,0,0,0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      rafRef.current = requestAnimationFrame(fade);
-    };
+    // Hard clear every few frames to remove artifacts
+    if (elapsed > delayBeforeFade + 1000) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  rafRef.current = requestAnimationFrame(fade);
+};
     fade(performance.now());
 
     const onDown = (e) => {
