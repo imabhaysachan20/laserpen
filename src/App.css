@@ -1,0 +1,6 @@
+html, body {
+  background: transparent;
+}
+canvas {
+  background: transparent !important;
+}
