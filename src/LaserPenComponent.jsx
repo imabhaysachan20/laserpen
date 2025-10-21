@@ -6,8 +6,8 @@ export default function LaserPen({
   enabled: enabledProp = false,
   color = "#ff2d55",
   lineWidth = 4.5,
-  fadeSpeed = 0.05, // Increased from 0.03 for more complete fade
-  delayBeforeFade = 1500,
+  fadeSpeed = 0.03, // Increased from 0.03 for more complete fade
+  delayBeforeFade = 1000,
 } = {}) {
   const containerRef = useRef(null);
   const trailRef = useRef(null);
