@@ -29,8 +29,7 @@ function createWindow() {
   // Load built Vite files
   win.loadFile(path.join(__dirname, '../dist/index.html'));
   
-  // Open dev tools for debugging
-  win.webContents.openDevTools();
+  
   
   win.setAlwaysOnTop(true, 'screen-saver');
 
